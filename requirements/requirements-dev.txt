@@ -1,0 +1,4 @@
+django-debug-toolbar
+isort
+flake8
+tox>=2.6.0

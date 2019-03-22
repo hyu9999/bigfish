@@ -1,0 +1,20 @@
+# user
+- model: auth.user
+  fields:
+    username: user
+    # password: test
+    password: pbkdf2_sha256$30000$tUx4N7RyvFHb$SVxlbSZv+rK3qjUKioO8XiqKzbgkrB0GTyjfynhyqkM=
+    email: user@example.com
+
+- model: auth.user
+  fields:
+    username: other
+    # password: test
+    password: pbkdf2_sha256$30000$tUx4N7RyvFHb$SVxlbSZv+rK3qjUKioO8XiqKzbgkrB0GTyjfynhyqkM=
+    email: other@example.com
+
+- model: users.applicationsettings
+  fields:
+    mother_language: en
+    instruction_language: zh
+    modified: '2016-04-23T12:00:00Z'

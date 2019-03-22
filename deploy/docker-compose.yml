@@ -1,0 +1,39 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6-alpine
+    environment: &postgres-env
+      POSTGRES_PASSWORD: "Big!Fish?2017"
+      POSTGRES_USER: bigfish
+      POSTGRES_DB: bigfish
+    volumes:
+      - /opt/bigfish/postgres:/var/lib/postgresql/data
+
+  nginx:
+    image: comly/bigfish-nginx:1.3.1
+    build: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /opt/bigfish/server/media:/opt/nginx/media:ro
+      - /opt/bigfish/server/static:/opt/nginx/static:ro
+      - /opt/bigfish/nginx:/opt/nginx
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    links:
+      - server
+
+  server:
+    image: comly/bigfish-server:1.3.2
+    build:
+      context: server
+      args:
+        PY_PKG_SRC: bigfish-*.whl
+    command: server
+    volumes:
+      - /opt/bigfish/server:/opt/server
+    links:
+      - postgres
+    environment:
+      <<: *postgres-env
+    restart: on-failure

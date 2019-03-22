@@ -1,0 +1,7 @@
+recursive-include requirements *.txt
+include README.md
+include MANIFEST.in
+graft scripts
+graft bigfish
+global-exclude *.py[co]
+global-exclude __pycache__

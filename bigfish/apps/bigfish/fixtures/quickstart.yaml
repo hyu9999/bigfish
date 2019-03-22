@@ -1,0 +1,8 @@
+- model: auth.user
+  fields:
+    username: admin
+    # password is "admin"
+    password: pbkdf2_sha256$30000$odPiSwPPfOLN$E+bygnykEgK+oUnbYBClmLB2ZMh/sy8BWo0/eDzO0K4=
+    email: admin@localhost
+    is_staff: true
+    is_superuser: true

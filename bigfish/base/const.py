@@ -1,0 +1,14 @@
+TEACHER = 1
+STUDENT = 2
+
+MALE = 1
+FEMALE = 2
+MEDIA_VERSION_DIR = '/media/version'    # 在线更新资源根目录
+
+PAGE_NUM = 20
+# 分数基数
+QUESTION_SCORE = 100
+# 语音识别
+XF_VOICE_RECOGNITION_URL = "http://api.xfyun.cn/v1/service/v1/iat"
+XF_VOICE_RECOGNITION_APP_ID = "5ade89a0"
+XF_VOICE_RECOGNITION_API_KEY = "bf7f8919d9c08936459882ef25377fcb"

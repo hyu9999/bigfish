@@ -1,0 +1,8 @@
+- model: auth.user
+  fields:
+    username: normal_user
+    # password: test
+    password: pbkdf2_sha256$30000$tUx4N7RyvFHb$SVxlbSZv+rK3qjUKioO8XiqKzbgkrB0GTyjfynhyqkM=
+    email: normal_user@example.com
+    is_staff: false
+    is_superuser: false

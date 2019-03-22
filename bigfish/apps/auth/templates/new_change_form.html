@@ -1,0 +1,64 @@
+{% extends "admin/change_form.html" %} 
+{% block sidebar %}
+<script type="text/javascript"> 
+	(function($) { 
+ 		$(document).ready(function($)
+ 		{ 
+ 			$.ajaxSetup({ 
+ 				beforeSend: function(xhr, settings) { 
+ 					function getCookie(name) { 
+ 					var cookieValue = null; 
+ 					if (document.cookie && document.cookie != '') { 
+ 					var cookies = document.cookie.split(';'); 
+					for (var i = 0; i < cookies.length; i++) { 
+ 					var cookie = django.jQuery.trim(cookies[i]); 
+ 					// Does this cookie string begin with the name we want? 
+ 					if (cookie.substring(0, name.length + 1) == (name + '=')) { 
+ 						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+    	                     			break; 
+ 					}
+ 				}
+ 			} 
+ 			return cookieValue; 
+ 		} 
+ 		if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) { 
+ 			// Only send the token to relative URLs i.e. locally. 
+ 			xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    	        }
+    	     } 
+    	}); 
+ 	change_options(); 
+ 	var c = $("select[id='id_c']"); 
+ 	c.change( function() { 
+ 		change_options(); 
+ 	}); 
+ });
+ var change_options = function() { 
+ 	b = $("select[id='id_b']") 
+ 	b.empty(); 
+ 	b.append('<option selected="selected" value="">---------</option>'); 
+ 	var select = $(this); 
+ 	var c = $("select[id='id_b']").attr("value"); 
+ 	$.ajax({ 
+ 		url: "/admin/demo/a/getBByC/", 
+ 		dataType: 'json', 
+ 		data : { 
+			"c" : c,
+	                "csrfmiddlewaretoken" : '{{ csrf_token }}'
+	    	}, 
+ 		type: 'post', 
+ 		success: function(data){ 
+ 		if (data != ""){ 
+ 			b.empty(); 
+ 			b.append('<option selected="selected" value="">---------</option>'); 
+ 			for(i=0; i<data.length; i++){ 
+ 				option = '<option value="' + data[i].pk + '">' + data[i].fields.option + '</option>'; 
+ 				b.append(option); 
+ 			} 
+ 		}
+ 		} 
+ 	});
+ } 
+ })(django.jQuery); 
+ </script> 
+ {% endblock %}
