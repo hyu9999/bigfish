@@ -125,6 +125,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 if DEBUG:
     INSTALLED_APPS += ['rest_framework_swagger', ]
     SWAGGER_SETTINGS = {
