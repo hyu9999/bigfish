@@ -9,10 +9,10 @@ logger = logging.getLogger('django')
 class BasicDB:
     DATABASES = {
         'default': {
-            'name': 'bigfish_loc',
+            'name': 'bigfish',
             'engine': 'django.db.backends.postgresql',
             'user': 'postgres',
-            'port': '5433',
+            'port': '5432',
             'password': '111111',
         }
 
@@ -23,12 +23,12 @@ class BasicDB:
 class SpareDB:
     DATABASES = {
         'default': {
-            'name': 'bigfish_touping',
+            'name': 'bigfish',
             'engine': 'django.db.backends.postgresql',
             'user': 'postgres',
             'port': '5432',
-            'host': '39.130.160.107',
-            'password': 'mint@2016',
+            'host': 'localhost',
+            'password': '111111',
         }
     }
 
