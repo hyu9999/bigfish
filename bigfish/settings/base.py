@@ -173,7 +173,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigfish.apps.bigfish.wsgi.application'
 
 my_config = MyConfig()
+print(my_config.get_config())
 DATABASES = my_config.get_config()
+
+
 # DATABASES = {
     # 'default': {
         # 'NAME': 'bigfish2',
