@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 
 from bigfish.apps.resources.models import Video, Audio, Image, \
@@ -11,6 +12,40 @@ class BaseModel(ImportExportActionModelAdmin):
     list_filter = ('is_active',)
     show_full_result_count = False
     list_per_page = 20
+
+
+class VideoResource(resources.ModelResource):
+    class Meta:
+        model = Video
+        skip_unchanged = True
+        report_skipped = False
+        fields = format_admin_list(Video)
+
+
+class AudioResource(resources.ModelResource):
+    class Meta:
+        model = Audio
+        skip_unchanged = True
+        report_skipped = False
+        fields = format_admin_list(Audio)
+
+
+class ImageResource(resources.ModelResource):
+    class Meta:
+        model = Image
+        skip_unchanged = True
+        report_skipped = False
+        fields = format_admin_list(Image)
+
+
+class PetResource(resources.ModelResource):
+    class Meta:
+        model = Pet
+        skip_unchanged = True
+        report_skipped = False
+        fields = format_admin_list(Pet)
+
+
 @admin.register(Video)
 class VideoAdmin(BaseModel):
     list_display = format_admin_list(Video)

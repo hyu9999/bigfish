@@ -58,7 +58,7 @@ class ArticleRuleSerializer(serializers.ModelSerializer):
         role_list = Sentence.objects.filter(article=obj).order_by('role_id').distinct().annotate(
             role_name=F('role__title'), role_img=F('role__res')).values('role_id', 'role_name', 'role_img')
 
-        return role_list
+        return list(role_list)
 
     class Meta:
         model = Article

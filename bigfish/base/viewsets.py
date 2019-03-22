@@ -152,7 +152,13 @@ class ModelViewSet(CreateModelMixin,
                    DestroyModelMixin,
                    ListModelMixin,
                    GenericViewSet):
-    pass
+    def permission_denied(self, request, message=None):
+        """
+        If request is not permitted, determine what kind of exception to raise.
+        """
+        if request.authenticators and not request.successful_authenticator:
+            raise exceptions.NotAuthenticated()
+        raise exceptions.PermissionDenied(detail=message)
 
 
 class ReadOnlyModelViewSet(RetrieveModelMixin,

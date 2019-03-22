@@ -1,11 +1,48 @@
 from django.contrib import admin
 from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from bigfish.apps.schools.models import Term, TermWeek, School, SchoolTerm, SchoolWeek, Klass, KlassProgress, \
     KlassActProgress, RegisterSerial
 from bigfish.apps.users.models import UserKlassRelationship
 from bigfish.utils.functions import format_admin_list
 from bigfish.utils.register import RegisterSN
+
+
+#
+# @admin.register(Subjects)
+# class SubjectsAdmin(admin.ModelAdmin):
+#     list_display = format_admin_list(Subjects)
+#     date_hierarchy = 'create_time'
+#     show_full_result_count = False
+#
+#
+# @admin.register(Segment)
+# class SegmentAdmin(admin.ModelAdmin):
+#     list_display = format_admin_list(Segment)
+#     date_hierarchy = 'create_time'
+#     show_full_result_count = False
+#
+#
+# @admin.register(Grade)
+# class GradeAdmin(admin.ModelAdmin):
+#     list_display = format_admin_list(Grade)
+#     date_hierarchy = 'create_time'
+#     show_full_result_count = False
+#
+#
+# @admin.register(SegmentGradeRel)
+# class SegmentGradeRelAdmin(admin.ModelAdmin):
+#     list_display = format_admin_list(SegmentGradeRel)
+#     date_hierarchy = 'create_time'
+#     show_full_result_count = False
+#
+#
+# @admin.register(SchoolSegmentGradeRel)
+# class SchoolSegmentGradeRelAdmin(admin.ModelAdmin):
+#     list_display = format_admin_list(SchoolSegmentGradeRel)
+#     date_hierarchy = 'create_time'
+#     show_full_result_count = False
 
 
 @admin.register(Term)
@@ -32,7 +69,7 @@ class SchoolResource(resources.ModelResource):
 
 
 @admin.register(School)
-class SchoolAdmin(admin.ModelAdmin):
+class SchoolAdmin(ImportExportModelAdmin):
     resource_class = SchoolResource
     list_display = format_admin_list(School)
     date_hierarchy = 'create_time'
@@ -82,6 +119,22 @@ class KlassAdmin(admin.ModelAdmin):
     search_fields = ('id', 'title', 'school__title', 'grade', 'publish__title', 'description')
     list_filter = ('is_active',)
     show_full_result_count = False
+
+    def get_queryset(self, request):
+        """
+        Returns a QuerySet of all model instances that can be edited by the
+        admin site. This is used by changelist_view.
+        """
+        if request.user.identity in [4, 5] or request.user.is_superuser:
+            qs = self.model._default_manager.get_queryset()
+        else:
+            klass_list = UserKlassRelationship.objects.filter(user=request.user, is_effect=True
+                                                              ).values_list('klass_id', flat=True)
+            qs = self.model._default_manager.get_queryset().filter(id__in=klass_list)
+        ordering = self.get_ordering(request)
+        if ordering:
+            qs = qs.order_by(*ordering)
+        return qs
 
 
 @admin.register(KlassProgress)

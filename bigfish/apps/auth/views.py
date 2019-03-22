@@ -1,18 +1,21 @@
-import datetime
 import logging
 
+import datetime
 from django.conf import settings
 from django.contrib.auth import authenticate
-from rest_auth.app_settings import LoginSerializer
+from django.contrib.auth import logout as django_logout
+from django.core.exceptions import ObjectDoesNotExist
+from rest_auth.app_settings import LoginSerializer, create_token
 from rest_auth.models import TokenModel
 from rest_auth.registration.views import sensitive_post_parameters_m
+from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
-from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 
 from bigfish.apps.bigfish.backend.hf_api.api import HFApi
 from bigfish.apps.users.models import BigfishUser
@@ -64,6 +67,31 @@ class BigfishLoginView(LoginView):
                                           context={'request': self.request})
 
         return Response(rsp_msg_200(serializer.data), status=status.HTTP_200_OK)
+
+    def login(self):
+        self.user = self.serializer.validated_data['user']
+        if not self.user.is_superuser:
+            expired_date = self.user.expired_date
+            if expired_date < datetime.datetime.now():
+                # logout
+                self.logout(self.request)
+                raise BFValidationError("无效用户！")
+        if getattr(settings, 'REST_USE_JWT', False):
+            self.token = jwt_encode(self.user)
+        else:
+            self.token = create_token(self.token_model, self.user,
+                                      self.serializer)
+
+        if getattr(settings, 'REST_SESSION_LOGIN', True):
+            self.process_login()
+
+    def logout(self, request):
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+
+        django_logout(request)
 
     def post(self, request, *args, **kwargs):
         """
@@ -322,15 +350,55 @@ class HFLoginView(LoginView):
         if not access_token:
             return Response(rsp_msg_400("请传入正确的access_token！"), status=status.HTTP_200_OK)
         hf = HFApi(access_token=access_token)
+        # 获取API_TOKEN
         try:
             api_token_info = hf.get_api_token()
-            api_token = api_token_info.get("data").get("apiToken")
-            user_info = hf.get_user_info(api_token)
-            username = user_info.get("data").get("username")
-            password = 'hf@2019'
         except Exception as e:
-            logger.error(e)
-            return Response(rsp_msg_400("token校验失败！"), status=status.HTTP_200_OK)
+            logger.error("[{}]获取api token失败！".format(e))
+            return Response(rsp_msg_400("获取api token失败！"), status=status.HTTP_200_OK)
+        # 根据返回码判断获取api_token是否成功
+        api_token_ret_code = api_token_info.get('retCode', None)
+        if api_token_ret_code != "000000":
+            ret_msg = api_token_info.get('retDesc', None)
+            logger.error("[{}]获取api token失败！".format(ret_msg))
+            return Response(rsp_msg_400("获取api token失败！"), status=status.HTTP_200_OK)
+        # 获取api_token
+        try:
+            api_token = api_token_info.get("data").get("apiToken")
+        except Exception as e:
+            logger.error("[{}]获取api token失败！".format(e))
+            return Response(rsp_msg_400("获取api_token失败！"), status=status.HTTP_200_OK)
+        # 校验access token
+        try:
+            check_token_info = hf.check_access_token(api_token)
+        except Exception as e:
+            logger.error("[{}]校验失败！".format(e))
+            return Response(rsp_msg_400("校验失败！"), status=status.HTTP_200_OK)
+        else:
+            user_info_ret_code = check_token_info.get('retCode', None)
+            if user_info_ret_code != "000000":
+                ret_msg = check_token_info.get('retDesc', None)
+                logger.error("[{}]校验失败！".format(ret_msg))
+                return Response(rsp_msg_400("校验失败！"), status=status.HTTP_200_OK)
+        # 获取用户信息
+        try:
+            user_info = hf.get_user_info(api_token)
+        except Exception as e:
+            logger.error("[{}]获取用户信息失败！".format(e))
+            return Response(rsp_msg_400("获取用户信息失败！"), status=status.HTTP_200_OK)
+        # 根据返回码判断获取user_info是否成功
+        user_info_ret_code = user_info.get('retCode', None)
+        if user_info_ret_code != "000000":
+            ret_msg = user_info.get('retDesc', None)
+            logger.error("[{}]获取用户信息失败！".format(ret_msg))
+            return Response(rsp_msg_400("获取用户信息失败！"), status=status.HTTP_200_OK)
+        # 获取username
+        try:
+            username = user_info.get("data").get("username")
+        except Exception as e:
+            logger.error("[{}]获取用户信息失败！".format(e))
+            return Response(rsp_msg_400("获取用户信息失败！"), status=status.HTTP_200_OK)
+        password = 'hf@2019'
         # 2.获取用户信息
         self.request.data["username"] = username
         self.request.data['password'] = password

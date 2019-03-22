@@ -5,10 +5,10 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from bigfish.apps.classrooms.models import BlackSetting, BlackSettingReport, Cast, CastReport, Classroom, \
-    ActivityReport, ActivityDetailReport
+    ActivityReport, ActivityDetailReport, StuActivity
 from bigfish.apps.classrooms.serializers import BlackSettingSerializer, BlackSettingReportSerializer, CastSerializer, \
     CastReportSerializer, ClassroomSerializer, \
-    ActivityReportSerializer, ActivityDetailReportSerializer
+    ActivityReportSerializer, ActivityDetailReportSerializer, StuActivitySerializer
 from bigfish.apps.operation.models import OperationRecord
 from bigfish.apps.schools.models import Klass, KlassProgress
 from bigfish.apps.textbooks.models import Activity
@@ -322,6 +322,12 @@ class ClassroomViewSet(viewsets.ModelViewSet):
             return Response(rsp_msg_200(result), status=status.HTTP_200_OK)
 
 
+class StuActivityViewSet(viewsets.ModelViewSet):
+    queryset = StuActivity.objects.all()
+    serializer_class = StuActivitySerializer
+    filter_fields = ('id', 'unit', 'lesson', 'activity', 'classroom', 'user')
+
+
 class ActivityReportViewSet(viewsets.ModelViewSet):
     queryset = ActivityReport.objects.all()
     serializer_class = ActivityReportSerializer
@@ -472,7 +478,7 @@ def close_except_classroom(klass_id, user, now_time, classroom):
                                                 finish_time__lt=finish_time)
         else:
             queryset = Classroom.objects.filter(klass=klass_id, opener=user, is_active=True, is_open=True,
-                                              finish_time__lt=finish_time).exclude(id=classroom.id)
+                                                finish_time__lt=finish_time).exclude(id=classroom.id)
     else:
         queryset = Classroom.objects.filter(klass=klass_id, opener=user, is_active=True, is_open=True,
                                             finish_time__lt=finish_time)
@@ -480,4 +486,3 @@ def close_except_classroom(klass_id, user, now_time, classroom):
         data = {"effect_time": int((now_time - obj.start_time).total_seconds() * 1000),
                 "is_open": False, "real_finish_time": now_time}
         Classroom.objects.update_or_create(defaults=data, **{"id": obj.id})
-

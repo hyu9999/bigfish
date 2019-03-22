@@ -1,9 +1,11 @@
+import time
+
 import datetime
 import logging
+
 import xlrd
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.sessions.models import Session
 from django.db import transaction
 from rest_auth.models import TokenModel
 from rest_auth.registration.views import RegisterView
@@ -11,6 +13,7 @@ from rest_framework.decorators import list_route
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from bigfish.apps.classrooms.views import get_cur_classroom
 from bigfish.apps.resources.models import Image
@@ -35,7 +38,7 @@ from bigfish.utils.push_jpush import get_json_data, normal_send_message
 logger = logging.getLogger('django')
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(CacheResponseMixin, viewsets.ModelViewSet):
     """
     用户创建修改删除
     """

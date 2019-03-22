@@ -1,3 +1,4 @@
+import sys
 import time
 from importlib import import_module
 
@@ -7,6 +8,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.utils.cache import patch_vary_headers
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.http import cookie_date
+from django.views.debug import technical_500_response
 
 
 class BFSessionMiddleware(MiddlewareMixin):
@@ -81,3 +83,9 @@ class IpAdminForbitMiddleWare(MiddlewareMixin):
             ip = request.META['REMOTE_ADDR']
         if not ip.startswith('192.168.1.120') or not ip.startswith('10.'):
             raise PermissionError
+
+
+class UserBasedExceptionMiddleware(MiddlewareMixin):
+    def process_exception(self, request):
+        if request.user.is_superuser or request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS:
+            return technical_500_response(request, *sys.exc_info())

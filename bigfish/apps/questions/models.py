@@ -10,8 +10,9 @@ class Question(models.Model):
     unit = models.CharField(max_length=100, default="", blank=True, null=True)
     lesson = models.CharField(max_length=100, default="", blank=True, null=True)
     textbook = models.CharField("教材", max_length=100, default="", blank=True, null=True)
-    question_type = models.CharField("题目类型", max_length=100, default="", blank=True, null=True)
-    show_type = models.CharField("表现类型", max_length=100, default="", blank=True, null=True)
+    question_type = models.CharField("题目类型", max_length=100, default="", blank=True, null=True)  # 一级分类
+    show_type = models.CharField("表现类型", max_length=100, default="", blank=True, null=True)  # 二级分类
+    third_type = models.CharField("三级分类", max_length=100, default="", blank=True, null=True)  # 三级分类
     difficulty = models.IntegerField("难度系数")
     name = models.CharField("题型名称", max_length=100, default="", blank=True, null=True)
     desc = models.TextField("答题说明")

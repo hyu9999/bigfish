@@ -125,6 +125,8 @@ class AbsActRpt(models.Model):
     third_type = models.CharField("活动三级分类", max_length=200, default="")
     act_title = models.CharField("活动名称", max_length=200, blank=True, default="")
     act_subtitle = models.CharField("活动子标题", max_length=200, blank=True, default="")
+    is_must = models.BooleanField("是否必学", default=False)
+    is_recommend = models.BooleanField("是否推荐", default=False)
 
     class Meta:
         abstract = True

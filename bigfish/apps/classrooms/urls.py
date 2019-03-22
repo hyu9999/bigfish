@@ -2,7 +2,7 @@ from rest_framework import routers
 
 from bigfish.apps.classrooms.views import BlackSettingViewSet, BlackSettingReportViewSet, CastViewSet, \
     CastReportViewSet, ClassroomViewSet, ActivityReportViewSet, \
-    ActivityDetailReportViewSet
+    ActivityDetailReportViewSet, StuActivityViewSet
 
 router = routers.SimpleRouter()
 
@@ -11,6 +11,7 @@ router.register('blacksetting_report', BlackSettingReportViewSet)
 router.register('cast', CastViewSet)
 router.register('cast_report', CastReportViewSet)
 router.register('classroom', ClassroomViewSet)
+router.register('stu_ca_report', StuActivityViewSet)
 router.register('activity_report', ActivityReportViewSet)
 router.register('activitydetail_report', ActivityDetailReportViewSet)
 

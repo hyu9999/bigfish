@@ -1,0 +1,1 @@
+INSERT INTO "dubbing_dubbingcategory"("id", "description", "create_time", "update_time", "name", "image", "order", "is_active", "is_default", "dubbing_main_id") VALUES (1, '主页', '2018-05-25 19:55:21.923288+08', '2018-05-25 19:55:21.923325+08', '主页', '', 0, 't', 'f', 1);

@@ -1,5 +1,5 @@
 from bigfish.apps.classrooms.models import BlackSetting, Classroom, ActivityDetailReport, BlackSettingReport, Cast, \
-    CastReport, ActivityReport
+    CastReport, ActivityReport, StuActivity
 from bigfish.base import serializers
 
 
@@ -30,6 +30,12 @@ class CastReportSerializer(serializers.ModelSerializer):
 class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
+        fields = "__all__"
+
+
+class StuActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StuActivity
         fields = "__all__"
 
 

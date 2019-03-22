@@ -2,6 +2,7 @@ import copy
 import logging
 from datetime import datetime
 
+from django.core.cache import cache
 from django.db.models import Sum
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
@@ -237,6 +238,7 @@ class ActivityViewSet(viewsets.ReadOnlyModelViewSet):
             classroom_id：1  #课堂id
         :return: \n
         """
+
         activity_id = request.query_params.get('activity_id', None)
         if activity_id is None:
             return Response(rsp_msg_400('请传入活动ID！'), status=status.HTTP_200_OK)
@@ -245,6 +247,9 @@ class ActivityViewSet(viewsets.ReadOnlyModelViewSet):
         except Exception as e:
             logger.debug(e)
             return Response(rsp_msg_400('传入的活动ID有误，请查证！'), status=status.HTTP_200_OK)
+        data = cache.get("activity_rule_data_{}".format(activity_id))
+        if data:
+            return Response(rsp_msg_200(data), status=status.HTTP_200_OK)
         # ret_data = act.rule_data
         ret_data = simple_act_rule(act.rule)
         try:
@@ -254,21 +259,23 @@ class ActivityViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             act_image = act_image_obj.image.res.url
         ret_data["act_image"] = act_image
-        # cur_classroom = get_cur_classroom(request.user)
-        classroom_id = request.data.get("classroom_id", None)
-        # update classroom latest_lesson/latest_act/lesson
-        if classroom_id:
-            try:
-                cur_classroom = Classroom.objects.get(id=classroom_id)
-            except Exception as e:
-                logger.info(e)
-                return Response(rsp_msg_400('传入的课堂ID有误，请查证！'), status=status.HTTP_200_OK)
-            cur_classroom.latest_lesson = act.lesson
-            cur_classroom.latest_act_id = activity_id
-            queryset = cur_classroom.lesson.filter(id=act.lesson_id)
-            if not queryset.exists():
-                cur_classroom.lesson.add(act.lesson)
-            cur_classroom.save()
+
+        cache.set("activity_rule_data_{}".format(activity_id), ret_data, timeout=None)
+        # # cur_classroom = get_cur_classroom(request.user)
+        # classroom_id = request.data.get("classroom_id", None)
+        # # update classroom latest_lesson/latest_act/lesson
+        # if classroom_id:
+        #     try:
+        #         cur_classroom = Classroom.objects.get(id=classroom_id)
+        #     except Exception as e:
+        #         logger.info(e)
+        #         return Response(rsp_msg_400('传入的课堂ID有误，请查证！'), status=status.HTTP_200_OK)
+        #     cur_classroom.latest_lesson = act.lesson
+        #     cur_classroom.latest_act_id = activity_id
+        #     queryset = cur_classroom.lesson.filter(id=act.lesson_id)
+        #     if not queryset.exists():
+        #         cur_classroom.lesson.add(act.lesson)
+        #     cur_classroom.save()
 
         return Response(rsp_msg_200(ret_data), status=status.HTTP_200_OK)
 

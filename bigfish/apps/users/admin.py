@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from bigfish.apps.users.models import BigfishUser, UserOnline, OnlineReport, UserKlassRelationship, UserChangeReport, \
+from bigfish.apps.users.models import BigfishUser, UserOnline, UserKlassRelationship, UserChangeReport, \
     UserFeedback, UserUsedInfo, UserWordHero, UserCourse, UserReg, UserPosition, UserScenariosReport
 from bigfish.utils.functions import format_admin_list
 
@@ -116,11 +116,6 @@ class UserKlassRelationshipAdmin(admin.ModelAdmin):
 @admin.register(UserOnline)
 class UserOnlineAdmin(admin.ModelAdmin):
     list_display = format_admin_list(UserOnline)
-
-
-@admin.register(OnlineReport)
-class OnlineReportAdmin(admin.ModelAdmin):
-    list_display = format_admin_list(OnlineReport)
 
 
 @admin.register(UserChangeReport)

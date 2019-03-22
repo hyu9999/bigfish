@@ -11,13 +11,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_NAME = 'bigfish'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '1(d58ti3kx_zoux#s7fz_m_3l^6r0p_i#o!zc%v#vtx6!*--s3'
+from corsheaders.defaults import default_headers
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 AUTH_USER_MODEL = "users.BigfishUser"
 INSTALLED_APPS = [
 
@@ -184,9 +185,21 @@ DATABASES = my_config.get_config()
     # },
 # }
 CACHES = {
+    # 'default': {
+    #     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    #     'LOCATION': '127.0.0.1:11211',
+    # },
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        "OPTIONS": {
+            # "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CLIENT_CLASS": "django_redis.client.HerdClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 2}
+            # "PASSWORD": "mysecret",
+            # "SOCKET_CONNECT_TIMEOUT": 5,  # in seconds
+            # "SOCKET_TIMEOUT": 5,  # in seconds
+        }
     },
     # this cache backend will be used by django-debug-panel
     'debug-panel': {
@@ -197,6 +210,11 @@ CACHES = {
             'MAX_ENTRIES': 200
         }
     }
+}
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60,
+    # 缓存存储
+    'DEFAULT_USE_CACHE': 'default',
 }
 # AUTH_PASSWORD_VALIDATORS = [
 #     {
@@ -289,7 +307,8 @@ except ImportError:
 CORS_ORIGIN_ALLOW_ALL = True
 
 PASSWORD_HASHERS = ('bigfish.utils.hashers.PlainTextPassword',)
-# SESSION_ENGINE = 'bigfish.apps.users.models'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # ================== log 配置 ==================
 # 指定日志根目录

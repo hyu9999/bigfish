@@ -142,8 +142,8 @@ class KnowledgeMap(AbsTextbooks):
 class PrepareAdvise(models.Model):
     purpose = jsonfield.JSONField("活动目的", blank=True, default={})
     step = jsonfield.JSONField("步骤", blank=True, default={})
-    statement = jsonfield.JSONField("教师话述", blank=True, default={})
     task = jsonfield.JSONField("教师任务", blank=True, default={})
+    statement = jsonfield.JSONField("教师话述", blank=True, default={})
     video = models.ForeignKey(Video, verbose_name="视频",
                               blank=True, null=True,
                               related_name="%(app_label)s_%(class)s_video")
@@ -165,6 +165,7 @@ class ActTab(AbsTextbooks):
                                   verbose_name="app端图片",
                                   blank=True, null=True,
                                   related_name="%(app_label)s_%(class)s_app_image")
+    is_must = models.BooleanField("是否必学", default=False)
 
     class Meta:
         ordering = ('order',)
@@ -210,6 +211,7 @@ class Activity(AbsTextbooks):
                                  verbose_name="活动类型", null=True, blank=True,
                                  related_name="%(app_label)s_%(class)s_act_type",
                                  default=1)
+    is_recommend = models.BooleanField("是否推荐", default=False)
     image = models.ForeignKey(Image,
                               verbose_name="图片",
                               blank=True, null=True,
@@ -250,6 +252,9 @@ class Activity(AbsTextbooks):
     """
     rule = jsonfield.JSONField("规则描述", blank=True, default={})
     rule_data = jsonfield.JSONField("规则数据", blank=True, default={})
+    """
+    ["xx", "xxx"]
+    """
     knowledge_point = jsonfield.JSONField("知识点", blank=True, default={})
     en_des = models.TextField("英文描述", blank=True, default="")
     prepare_advise = models.ForeignKey(PrepareAdvise, verbose_name="备课建议",

@@ -49,7 +49,6 @@ def wait_for_psql(user, password, dbname, host, port, try_count):
             elif 'password authentication failed' in message:
                 exit(3)
             time.sleep(1)
-            print(message)
 
     print("Couldn't connect do PostgreSQL on {}:{}".format(host, port))
     exit(1)

@@ -1,0 +1,3 @@
+INSERT INTO "operation_operatetype"("id", "title", "subtitle", "is_active", "description", "create_time", "update_time") VALUES (1, '课堂操作', '课堂操作', 't', '', '2018-08-26 19:13:15.43971+08', '2018-08-26 19:13:15.439743+08');
+INSERT INTO "operation_operatetype"("id", "title", "subtitle", "is_active", "description", "create_time", "update_time") VALUES (2, '教研操作', '教研操作', 't', '', '2018-08-26 19:13:27.662228+08', '2018-08-26 19:13:27.662265+08');
+INSERT INTO "operation_operatetype"("id", "title", "subtitle", "is_active", "description", "create_time", "update_time") VALUES (3, '资源操作', '资源操作', 't', '', '2018-08-26 19:13:37.336981+08', '2018-08-26 19:13:37.337025+08');

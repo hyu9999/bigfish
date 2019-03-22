@@ -130,6 +130,7 @@ class BigfishUser(AbstractBaseUser, PermissionsMixin):
     student_code = models.CharField('国家学籍号', max_length=200, blank=True)
     province_code = models.CharField('省学籍号', max_length=200, blank=True)
     is_formal = models.BooleanField("是否正式用户", default=True)
+    expired_date = models.DateTimeField("失效日期", default=timezone.now)
 
     class Meta:
         verbose_name = "1.1 用户"
@@ -200,23 +201,6 @@ class UserOnline(models.Model):
     class Meta:
         verbose_name = "1.3 用户在线情况"
         verbose_name_plural = verbose_name
-
-
-class OnlineReport(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE,
-                             related_name='%(app_label)s_%(class)s_user',
-                             verbose_name='用户')
-    login_time = models.DateTimeField('上线时间', default=timezone.now)
-    logout_time = models.DateTimeField('下线时间', default=timezone.now)
-    online_time = models.BigIntegerField('在线时长', blank=True, default=0)
-
-    class Meta:
-        verbose_name = "1.3.1 在线情况记录"
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.user.username
 
 
 class UserKlassRelationship(models.Model):

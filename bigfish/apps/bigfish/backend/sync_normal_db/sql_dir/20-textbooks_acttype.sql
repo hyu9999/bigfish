@@ -1,0 +1,12 @@
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (1, 2, 1, '课文学习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (2, 2, 1, '词汇学习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (3, 2, 1, '综合能力');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (4, 2, 1, '课堂娱乐');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (5, 1, 1, '课文练习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (6, 1, 1, '词汇练习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (7, 1, 1, '课堂练习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (8, 1, 2, '综合复习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (9, 1, 2, '单元测试');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (10, 1, 2, '基础复习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (11, 1, 2, '单元复习');
+INSERT INTO "textbooks_acttype"("id", "first_type", "second_type", "third_type") VALUES (12, 1, 2, '模拟考试');
