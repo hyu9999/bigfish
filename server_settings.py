@@ -14,10 +14,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'bigfish_2',
+       'NAME': 'bigfish2',
        'USER':'postgres',
-       'PASSWORD': 'mint@2016',
-       'HOST': '39.130.160.107'
+       'PASSWORD': '111111',
+       'HOST': 'localhost'
     }
 }
 # SESSION_COOKIE_AGE = 2
