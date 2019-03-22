@@ -173,19 +173,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigfish.apps.bigfish.wsgi.application'
 
 my_config = MyConfig()
-print(my_config.get_config())
 DATABASES = my_config.get_config()
 
-
 # DATABASES = {
-    # 'default': {
-        # 'NAME': 'bigfish2',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'USER': 'postgres',
-        # 'PORT': '5432',
-        # 'HOST': "39.130.160.107",
-        # 'PASSWORD': 'mint@2016'
-    # },
+# 'default': {
+# 'NAME': 'bigfish2',
+# 'ENGINE': 'django.db.backends.postgresql',
+# 'USER': 'postgres',
+# 'PORT': '5432',
+# 'HOST': "39.130.160.107",
+# 'PASSWORD': 'mint@2016'
+# },
 # }
 CACHES = {
     # 'default': {
@@ -347,7 +345,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
-            'file_handler': {
+        'file_handler': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': LOG_FILE,
@@ -382,7 +380,6 @@ CHANNEL_LAYERS = {
         "ROUTING": "bigfish.settings.routing.channel_routing",
     },
 }
-
 
 WECHAT_APPID = "wx923f6e5c3b4d4f08"
 WECHAT_APPSECRET = "cae9316aa364648f635ccf3e1170f49a"
